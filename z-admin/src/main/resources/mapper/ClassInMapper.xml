@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy.zadmin.mapper.ClassInMapper">
+<!--    -->
+<!--    Page<ChargeRecord> selectPageVo(@Param("page") Page<ChargeRecord> page, @Param("chargeRecord") ChargeRecord chargeRecord);-->
+
+<!--    //创建记录-->
+<!--    Integer  createChargeRecord(@Param("chargeRecord") ChargeRecord chargeRecord);-->
+
+
+<!--   分页带条件查询 -->
+    <select id="selectPageVo" resultType="com.easy.zadmin.pojo.entity.ClassInVo">
+        select *from class_in where 1=1 order by order_time desc
+    </select>
+
+
+    <insert id="createClassInVo" useGeneratedKeys="true" parameterType="com.easy.zadmin.pojo.entity.ClassInVo">
+    # DATE_ADD(NOW(), INTERVAL 8 HOUR)
+        insert into class_in
+        set customer_name=#{classVo.customerName},
+            course_type=#{classVo.courseType},
+            order_time=NOW(),
+            class_in_time=#{classVo.classInTime},
+            course_hours=#{classVo.courseHours},
+            order_money=#{classVo.orderMoney},
+            course_status=#{classVo.courseStatus},
+            del_flag=#{classVo.delFlag}
+    </insert>
+
+
+</mapper>

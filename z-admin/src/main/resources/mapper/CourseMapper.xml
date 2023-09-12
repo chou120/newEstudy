@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy.zadmin.mapper.CourseMapper">
+
+
+    <select id="getCourseInfos" resultType="com.easy.zadmin.pojo.entity.Course" parameterType="java.lang.String">
+        select *
+        from course
+        where 1=1 and  del_flag=0
+        <if test="null != course and '' != course">
+            <bind name="course" value="'%'+course+'%'"/>
+            and course_name like #{course}
+        </if>
+    </select>
+
+<!--   分页带条件查询 -->
+    <select id="selectPageVo" resultType="com.easy.zadmin.pojo.entity.Course">
+        select *from course where 1=1 and del_flag=0
+
+        <if test="null != course.courseName and '' != course.courseName">
+            <bind name="course.courseName" value="'%'+course.courseName+'%'"/>
+            and course_name like #{course.courseName}
+        </if>
+
+        order by create_time desc
+
+    </select>
+
+
+    <insert id="createCourse" useGeneratedKeys="true" parameterType="com.easy.zadmin.pojo.entity.Course">
+# DATE_ADD(NOW(), INTERVAL 8 HOUR)
+        insert into course
+        set course_name=#{course.courseName},
+            course_status=#{course.courseStatus},
+            create_time=NOW(),
+            del_flag=#{course.delFlag}
+
+    </insert>
+
+<!--刪除客户 暂时不需要-->
+    <update id="updateCourseStatus" parameterType="com.easy.zadmin.pojo.entity.Course">
+        update course set course_status=#{course.courseStatus} where course_id=#{course.courseId} and del_flag=0
+    </update>
+
+
+
+
+<!--    &lt;!&ndash;根据邮箱查询&ndash;&gt;-->
+<!--    <select id="getByCondition" parameterType="com.easy.zadmin.pojo.entity.Course"-->
+<!--            resultType="com.easy.zadmin.pojo.entity.CustStu">-->
+<!--        select * from cust_student where  del_flag=0 and cust_status=0-->
+
+<!--        <if test="null != custStu.custEmail and '' != custStu.custEmail">-->
+<!--            &lt;!&ndash;            <bind name="user.email" value="'%'+user.email+'%'"/>&ndash;&gt;-->
+<!--            and cust_email = #{custStu.custEmail}-->
+<!--        </if>-->
+<!--        <if test="null != custStu.id and '' != custStu.id">-->
+<!--            &lt;!&ndash;            <bind name="user.email" value="'%'+user.email+'%'"/>&ndash;&gt;-->
+<!--            and id = #{custStu.id}-->
+<!--        </if>-->
+<!--    </select>-->
+
+</mapper>

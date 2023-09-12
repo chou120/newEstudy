@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy.zadmin.mapper.RebackDetailMapper">
+
+<!--   分页带条件查询 -->
+    <select id="queryDetail" resultType="java.lang.String">
+        select * from `reback_detail` where   order_id=#{orderId}
+
+    </select>
+    <insert id="createRebackDetail"  parameterType="com.easy.zadmin.pojo.entity.RebackDetail">
+        insert into `reback_detail`
+        set order_id=#{rebackDetail.orderId},
+            reback_money=#{rebackDetail.rebackMoney},
+            remark=#{rebackDetail.remark},
+            reback_type=#{rebackDetail.rebackType}
+    </insert>
+
+<!--编辑订单-->
+<!--    <update id="editOrder" parameterType="com.easy.zadmin.pojo.entity.Order">-->
+<!--        update `order` set teach_name=#{order.teachName},-->
+<!--                           course_type=#{order.courseType},-->
+<!--                           course_time=#{order.courseTime},-->
+<!--                           course_hours=#{order.courserHours},-->
+<!--                           price=#{order.price},-->
+<!--                           order_total=#{order.orderTotal},-->
+<!--                           user_id=#{order.userId}-->
+<!--                           where order_id=#{order.orderId} and del_flag=0-->
+<!--    </update>-->
+
+<!--    批量更新-->
+    <!-- 批量更新第二种方法，针对单个字段进行批量更新 -->
+<!--    <update id="updateBatch" parameterType="java.util.List">-->
+<!--        UPDATE `order`-->
+<!--        SET order_status = 2-->
+<!--        WHERE `order`.order_id IN-->
+<!--        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">-->
+<!--            #{item.orderId}-->
+<!--        </foreach>-->
+<!--    </update>-->
+
+
+</mapper>

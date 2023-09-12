@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy.zadmin.mapper.CustStuMapper">
+
+
+    <select id="queryCustStu" resultType="com.easy.zadmin.pojo.entity.CustStu">
+        select *
+        from cust_student
+        where  del_flag=0 and cust_status=0 and id=#{stuId};
+    </select>
+
+    <select id="getCustStuInfos" resultType="com.easy.zadmin.pojo.entity.CustStu" parameterType="java.lang.String">
+        select *
+        from cust_student
+        where  del_flag=0 and cust_status=0 and 1=1
+
+        <if test="null != username and '' != username">
+            <bind name="username" value="'%'+username+'%'"/>
+            and cust_name like #{username}
+        </if>
+    </select>
+
+<!--   分页带条件查询 -->
+    <select id="selectPageVo" resultType="com.easy.zadmin.pojo.entity.CustStu">
+        select *from cust_student where 1=1 and del_flag=0 and cust_status=0
+
+        <if test="null != custStu.id and '' != custStu.id">
+            <bind name="custStu.id" value="'%'+custStu.id+'%'"/>
+            and id = #{custStu.id}
+        </if>
+        <if test="null != custStu.custName and '' != custStu.custName">
+            <bind name="custStu.custName" value="'%'+custStu.custName+'%'"/>
+            and cust_name like #{custStu.custName}
+        </if>
+
+        <if test="null != custStu.custEmail and '' != custStu.custEmail">
+            <bind name="custStu.custEmail" value="'%'+custStu.custEmail+'%'"/>
+            and cust_email like #{custStu.custEmail}
+        </if>
+        order by create_time desc
+    </select>
+
+
+    <insert id="createCustStu" useGeneratedKeys="true" parameterType="com.easy.zadmin.pojo.entity.CustStu">
+        insert into cust_student
+        set cust_name=#{custStu.custName},
+            cust_status=#{custStu.custStatus},
+            cust_email=#{custStu.custEmail},
+            total=#{custStu.total},
+            surplus_amount=#{custStu.surplusAmount},
+            create_time=NOW(),
+            del_flag=#{custStu.delFlag}
+
+    </insert>
+<!--编辑客户-->
+    <update id="editCustStu" parameterType="com.easy.zadmin.pojo.entity.CustStu">
+        update cust_student
+        <set>
+            <if test="null != custStu.custName and ''!= custStu.custName">
+                cust_name = #{custStu.custName},
+            </if>
+            <if test="null != custStu.custEmail and '' != custStu.custEmail">
+                cust_email = #{custStu.custEmail},
+            </if>
+            <if test="null != custStu.usedAmount and '' != custStu.usedAmount">
+                used_amount = #{custStu.usedAmount},
+            </if>
+            <if test="null != custStu.surplusAmount and '' != custStu.surplusAmount">
+                surplus_amount = #{custStu.surplusAmount},
+            </if>
+
+
+        </set>
+        where id=#{custStu.id} and del_flag=0 and cust_status=0;
+    </update>
+<!--刪除客户 暂时不需要-->
+    <update id="delCustStu" parameterType="com.easy.zadmin.pojo.entity.CustStu">
+        update cust_student set del_flag=1 where id=#{custStu.id} and del_flag=0 and cust_status=0
+    </update>
+
+    <!--续费-->
+    <update id="renewalOfPayment" parameterType="com.easy.zadmin.pojo.entity.CustStu">
+        update cust_student set total=#{custStu.total} ,surplus_amount=#{custStu.surplusAmount} where id=#{custStu.id} and del_flag=0 and cust_status=0
+    </update>
+    <!--    退费    -->
+<!--    <update id="refund" parameterType="java.util.Map">-->
+<!--        update cust_student set total=#{custStu.total}  where id=#{custStu.id} and del_flag=0 and cust_status=0;-->
+<!--    </update>-->
+
+
+    <!--根据邮箱查询-->
+    <select id="getByCondition" parameterType="com.easy.zadmin.pojo.entity.CustStu"
+            resultType="com.easy.zadmin.pojo.entity.CustStu">
+        select * from cust_student where  del_flag=0 and cust_status=0
+
+        <if test="null != custStu.custEmail and '' != custStu.custEmail">
+            <!--            <bind name="user.email" value="'%'+user.email+'%'"/>-->
+            and cust_email = #{custStu.custEmail}
+        </if>
+        <if test="null != custStu.id and '' != custStu.id">
+            <!--            <bind name="user.email" value="'%'+user.email+'%'"/>-->
+            and id = #{custStu.id}
+        </if>
+    </select>
+
+
+
+
+<!--  批量更新  -->
+
+
+</mapper>

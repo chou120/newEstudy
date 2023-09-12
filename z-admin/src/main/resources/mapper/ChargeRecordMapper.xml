@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easy.zadmin.mapper.ChargeMapper">
+<!--    -->
+<!--    Page<ChargeRecord> selectPageVo(@Param("page") Page<ChargeRecord> page, @Param("chargeRecord") ChargeRecord chargeRecord);-->
+
+<!--    //创建记录-->
+<!--    Integer  createChargeRecord(@Param("chargeRecord") ChargeRecord chargeRecord);-->
+
+
+<!--   分页带条件查询 -->
+    <select id="selectPageVo" resultType="com.easy.zadmin.pojo.entity.ChargeRecord">
+        select *from charge_record where 1=1 order by create_time desc
+
+<!--        <if test="null != chargeRecord.customerName and '' != chargeRecord.customerName">-->
+<!--            <bind name="chargeRecord.customerName" value="'%'+chargeRecord.customerName+'%'"/>-->
+<!--            and customer_name like #{chargeRecord.customerName}-->
+<!--        </if>-->
+
+
+    </select>
+
+
+    <insert id="createChargeRecord" useGeneratedKeys="true" parameterType="com.easy.zadmin.pojo.entity.ChargeRecord">
+# DATE_ADD(NOW(), INTERVAL 8 HOUR)
+        insert into charge_record
+        set customer_name=#{chargeRecord.customerName},
+            charge_type=#{chargeRecord.chargeType},
+            create_time=NOW(),
+            money=#{chargeRecord.money}
+
+    </insert>
+
+
+</mapper>
