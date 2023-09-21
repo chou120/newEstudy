@@ -34,10 +34,20 @@ public class LoginServiceImpl implements LoginServcie {
     @Override
     public ResponseResult login(User user) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword());
-        LOGGER.info("authenticationToken:"+authenticationToken);
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        LOGGER.error("authenticationToken.getPrincipal():"+authenticationToken.getPrincipal());
+        LOGGER.error("authenticationToken.getCredentials():"+authenticationToken.getCredentials());
+        Authentication authenticate=null;
+        try{
+            //如果输入的账户和密码错误，通常情况下会抛出AuthenticationException异常，而不是直接返回数据。这是一种安全机制，用于防止未经授权的访问
+            authenticate  = authenticationManager.authenticate(authenticationToken);
+        }catch (Exception e){
+            LOGGER.info("e:"+e);
+        }
+
+        LOGGER.info("authenticate:"+authenticate);
+
         if(Objects.isNull(authenticate)){
-            throw new RuntimeException("用户名或密码错误");
+         return    ResponseResult.USER_OR_PASSWORD_ERROR;
         }
         //使用userid生成token
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
@@ -48,6 +58,7 @@ public class LoginServiceImpl implements LoginServcie {
         //把token响应给前端
         HashMap<String,Object> map = new HashMap<>();
         map.put("token",jwt);
+        map.put("email",loginUser.getUser().getEmail());
         map.put("permissions",loginUser.getPermissions());
 
         return new ResponseResult("200","登陆成功",map);

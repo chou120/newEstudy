@@ -149,4 +149,11 @@ public class OrderServiceImpl implements OrderService {
         }
         return ResponseResult.REQ_FAIL;
     }
+
+    @Override
+    public ResponseResult delAllOrderById(List<Order> list) {
+        Integer integer = orderMapper.delOrder(list);
+
+        return integer!=0?ResponseResult.REQ_SUCCESS:ResponseResult.REQ_FAIL;
+    }
 }

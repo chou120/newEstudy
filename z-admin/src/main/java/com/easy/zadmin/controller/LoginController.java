@@ -1,6 +1,7 @@
 package com.easy.zadmin.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.easy.zadmin.common.res.ResponseResult;
 import com.easy.zadmin.pojo.entity.User;
 import com.easy.zadmin.service.LoginServcie;
@@ -33,6 +34,14 @@ public class LoginController {
     @PostMapping("/user/exUserLogin") //sys:user:list
    //@PreAuthorize("hasAuthority('sys:user:list')")
     public ResponseResult login(@RequestBody User user) {
+
+        if(StringUtils.isBlank(user.getEmail())){
+            return ResponseResult.USER_EMAIL_NOT_NULL;
+        }
+        if(StringUtils.isBlank(user.getPassword())){
+            return ResponseResult.USER_PASSWORD_NOT_EMPTY;
+        }
+
         return loginServcie.login(user);
     }
     @RequestMapping("/hello")

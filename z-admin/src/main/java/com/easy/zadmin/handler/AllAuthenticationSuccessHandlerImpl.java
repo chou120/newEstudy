@@ -24,7 +24,7 @@ public class AllAuthenticationSuccessHandlerImpl  implements AuthenticationSucce
      //   AuthenticationSuccessHandler.super.onAuthenticationSuccess(request, response, chain, authentication);
 
         // 当认证成功后，响应 JSON 数据给前端
-        final ResponseResult r = new ResponseResult("200","认证成功");
+        final ResponseResult r = new ResponseResult("200","登录成功");
         final String jsonString = JSONObject.toJSONString(r);
         response.setContentType("application/json;charset=utf-8");
         response.getWriter().write(jsonString);

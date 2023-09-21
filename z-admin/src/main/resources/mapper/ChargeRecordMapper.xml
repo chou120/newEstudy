@@ -11,13 +11,12 @@
 
 <!--   分页带条件查询 -->
     <select id="selectPageVo" resultType="com.easy.zadmin.pojo.entity.ChargeRecord">
-        select *from charge_record where 1=1 order by create_time desc
-
-<!--        <if test="null != chargeRecord.customerName and '' != chargeRecord.customerName">-->
+        select *from charge_record where 1=1
+        <if test="null != chargeRecord.customerName and '' != chargeRecord.customerName">
 <!--            <bind name="chargeRecord.customerName" value="'%'+chargeRecord.customerName+'%'"/>-->
-<!--            and customer_name like #{chargeRecord.customerName}-->
-<!--        </if>-->
-
+            and customer_name like concat('%', #{chargeRecord.customerName}, '%')
+        </if>
+        order by create_time desc
 
     </select>
 

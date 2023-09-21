@@ -31,79 +31,82 @@
         <result property="tutor_characteristic_analysis" column="tutorCharacteristicAnalysis"/>
     </resultMap>
 
-    <!--    <sql id="allSql">-->
-    <!--               id,-->
-    <!--               user_name,-->
-    <!--               nick_name,-->
-    <!--               `status`,-->
-    <!--               email,-->
-    <!--               phonenumber,-->
-    <!--               sex,-->
-    <!--               avatar,-->
-    <!--               user_type,-->
-    <!--               create_by,-->
-    <!--               create_time,-->
-    <!--               update_by,-->
-    <!--               del_flag,-->
-    <!--               tutor_eng_name,-->
-    <!--               tutor_university,-->
-    <!--               tutor_education,-->
-    <!--               tutor_education_bg,-->
-    <!--               tutor_major,-->
-    <!--               tutor_adept,-->
-    <!--               tutor_characteristic_analysis-->
-    <!--    </sql>-->
 
+    <sql id="allSql">
+        id,
+                   user_name,
+                   nick_name,
+                   `status`,
+                   email,
+                   phonenumber,
+                   sex,
+                   avatar,
+                   user_type,
+                   create_by,
+                   create_time,
+                   update_by,
+                   del_flag,
+                   tutor_eng_name,
+                   tutor_university,
+                   tutor_education,
+                   tutor_education_bg,
+                   tutor_major,
+                   tutor_adept,
+                   tutor_characteristic_analysis
+    </sql>
+
+    <!--          id,
+                   user_name,
+                   nick_name,
+                   `status`,
+                   email,
+                   phonenumber,
+                   sex,
+                   avatar,
+                   user_type,
+                   create_by,
+                   create_time,
+                   update_by,
+                   del_flag,
+                   tutor_eng_name,
+                   tutor_university,
+                   tutor_education,
+                   tutor_education_bg,
+                   tutor_major,
+                   tutor_adept,
+                   tutor_characteristic_analysis  -->
 
     <select id="queryUser" resultType="com.easy.zadmin.pojo.entity.User">
-        select id,
-               user_name,
-               nick_name,
-               `status`,
-               email,
-               phonenumber,
-               sex,
-               avatar,
-               user_type,
-               create_by,
-               create_time,
-               update_by,
-               del_flag,
-               tutor_eng_name,
-               tutor_university,
-               tutor_education,
-               tutor_education_bg,
-               tutor_major,
-               tutor_adept,
-               tutor_characteristic_analysis
+        select
+        <include refid="allSql"/>
         from sys_user
-        where  del_flag=0 and status=0 and id=#{userId};
+        where del_flag=0 and status=0 and id=#{userId};
     </select>
 
 
     <select id="getUsersInfos" resultType="com.easy.zadmin.pojo.entity.User" parameterType="java.lang.String">
         select id,
-               user_name,
-               nick_name,
-               `status`,
-               email,
-               phonenumber,
-               sex,
-               avatar,
-               user_type,
-               create_by,
-               create_time,
-               update_by,
-               del_flag,
-               tutor_eng_name,
-               tutor_university,
-               tutor_education,
-               tutor_education_bg,
-               tutor_major,
-               tutor_adept,
-               tutor_characteristic_analysis
+        user_name,
+        nick_name,
+        `status`,
+        email,
+        phonenumber,
+        sex,
+        avatar,
+        user_type,
+        create_by,
+        create_time,
+        update_by,
+        del_flag,
+        tutor_eng_name,
+        tutor_university,
+        tutor_education,
+        tutor_education_bg,
+        tutor_major,
+        tutor_adept,
+        tutor_characteristic_analysis
         from sys_user
-        where  del_flag=0 and status=0 and 1=1
+        where del_flag=0  and 1=1
         <if test="null != teaName and '' != teaName">
             <bind name="teaName" value="'%'+teaName+'%'"/>
             and user_name like #{teaName}
@@ -131,7 +134,7 @@
         tutor_major,
         tutor_adept,
         tutor_characteristic_analysis
-        from sys_user where 1=1 and del_flag=0 and status=0
+        from sys_user where 1=1 and del_flag=0
 
         <if test="null != user.userName and '' != user.userName">
             <bind name="user.userName" value="'%'+user.userName+'%'"/>
@@ -196,28 +199,80 @@
                 password=#{user.password},
             </if>
         </set>
-        where id=#{user.id} and del_flag=0 and status=0;
+        <where>
+            <if test="null != user.id and '' != user.id">
+                id=#{user.id}
+            </if>
+            <if test="null !=user.email and '' !=user.email">
+              and  email=#{user.email}
+            </if>
+        </where>
+            and del_flag=0 and status=0;
     </update>
 
-    <update id="delUser" parameterType="com.easy.zadmin.pojo.entity.User">
-        update sys_user set del_flag=1 where id=#{user.id} and del_flag=0 and status=0
+
+    <update id="editUserById" parameterType="com.easy.zadmin.pojo.entity.User">
+        update sys_user
+        <set>
+            <if test="null != user.userName and '' != user.userName">
+                user_name = #{user.userName},
+            </if>
+            <if test="null != user.phonenumber and '' != user.phonenumber">
+                phonenumber = #{user.phonenumber},
+            </if>
+
+            <if test="null != user.email and '' != user.email">
+                email = #{user.email},
+            </if>
+            <if test="null != user.password and '' != user.password">
+                password=#{user.password},
+            </if>
+        </set>
+        <where>
+            <if test="null != user.id and '' != user.id">
+                id=#{user.id}
+            </if>
+        </where>
+        and del_flag=0 and status=0;
+    </update>
+
+
+<!--    批量删除-->
+    <update id="delUser" parameterType="java.util.List">
+        update sys_user
+        set del_flag=1
+        where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+
+
     </update>
 
     <!--updateStatus-->
     <update id="updateStatus" parameterType="com.easy.zadmin.pojo.entity.User">
-        update sys_user set status=#{user.status} where id=#{user.id} and del_flag=0 and status=0
+        update sys_user
+        set status=#{user.status}
+        where id = #{user.id}
+          and del_flag = 0
+#           and status = 0
     </update>
 
     <update id="updatePass" parameterType="com.easy.zadmin.pojo.entity.User">
-        update sys_user set password=#{user.password} where email=#{user.email} and del_flag=0 and status=0;
+        update sys_user
+        set password=#{user.password}
+        where email = #{user.email}
+          and del_flag = 0
+          and status = 0;
     </update>
 
 
-    <!--根据邮箱查询-->
+    <!--根据邮箱查询 或者id查询-->
     <select id="getByCondition" parameterType="com.easy.zadmin.pojo.entity.User"
             resultType="com.easy.zadmin.pojo.entity.User">
         select id,
         user_name,
+        password,
         nick_name,
         `status`,
         email,
@@ -236,7 +291,7 @@
         tutor_major,
         tutor_adept,
         tutor_characteristic_analysis
-        from sys_user where  del_flag=0 and status=0
+        from sys_user where del_flag=0 and status=0
         <!--        <if test="null != user.userName and '' != user.userName">-->
         <!--&lt;!&ndash;     <bind name="user.userName" value="'%'+user.userName+'%'"/>&ndash;&gt;-->
         <!--            and user_name = #{user.userName}-->
@@ -245,7 +300,10 @@
         <!--&lt;!&ndash;            <bind name="user.phonenumber" value="'%'+user.phonenumber+'%'"/>&ndash;&gt;-->
         <!--            and phonenumber = #{phonenumber}-->
         <!--        </if>-->
-
+        <if test="null != user.id and '' != user.id">
+            <!--            <bind name="user.email" value="'%'+user.email+'%'"/>-->
+            and id = #{user.id}
+        </if>
         <if test="null != user.email and '' != user.email">
             <!--            <bind name="user.email" value="'%'+user.email+'%'"/>-->
             and email = #{user.email}

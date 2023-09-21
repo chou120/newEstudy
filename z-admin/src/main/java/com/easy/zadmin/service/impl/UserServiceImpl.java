@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.easy.zadmin.common.res.ResponseResult;
 import com.easy.zadmin.controller.UserController;
 import com.easy.zadmin.mapper.UserMapper;
+import com.easy.zadmin.pojo.dto.EditUser;
 import com.easy.zadmin.pojo.dto.PageUser;
 import com.easy.zadmin.pojo.entity.User;
 import com.easy.zadmin.service.UserService;
@@ -84,14 +85,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseResult editUser(User user) {
+        User user_t = new User();
+        user_t.setId(user.getId());
+        User byCondition = userMapper.getByCondition(user_t);//查看更新的密码是否有变化
 
-
-        User byCondition = userMapper.getByCondition(user);//查看更新的密码是否有变化
+        if(byCondition==null){
+            return  ResponseResult.USERISNULLORFORBIDEN;
+        }
+        LOGGER.info("进行更改的用户是:"+byCondition);
         String password = byCondition.getPassword();
+        LOGGER.info("password:"+password);
         String encode_pass = new BCryptPasswordEncoder().encode(user.getPassword());
-        Integer result = userMapper.editUser(user);
-        if(!password.equals(encode_pass)){//输入的密码和数据库中的密码不一致
+        boolean matches = new BCryptPasswordEncoder().matches(user.getPassword(), password);
+        Integer result=0;
+        if(!matches){//输入的密码原始密码和数据库中的密码不一致
+            // LOGGER.info("encode_pass:"+encode_pass);
+            user.setPassword(encode_pass); //加密之后的密码
+            result= userMapper.editUserById(user);
+            LOGGER.info("result:"+result);
+            LOGGER.info("进入退出动作");
             loginService.logout(); //退出重新登录
+            return  ResponseResult.LOGIN_OUT_ERLOGIN;
         }
 
         if (result > 0) {
@@ -101,8 +115,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult delUserById(User user) {
+    public ResponseResult delUserById(List<User> user) {
 
         Integer res = userMapper.delUser(user);
 
@@ -143,4 +158,48 @@ public class UserServiceImpl implements UserService {
         }
         return ResponseResult.USER_EMAIL_NOT_EXIST;
     }
+
+
+    /**
+     * 修改密码
+     */
+    @Override
+    public ResponseResult updatePwd(EditUser editUser){
+        User byCondition = userMapper.getByCondition(editUser.getUser());
+        if(byCondition==null){
+            return  ResponseResult.USERISNULLORFORBIDEN;
+        }
+        LOGGER.info("进行更改的用户是:"+byCondition);
+        String password = byCondition.getPassword();
+        LOGGER.info("password:"+password);
+        boolean matches = new BCryptPasswordEncoder().matches(editUser.getUser().getPassword(), password);
+        if(!matches){
+            return  ResponseResult.OLDPWDISFALSE;
+        }
+        if(!editUser.getFirstPwd().equals(editUser.getSecondPwd())){
+            return ResponseResult.FIRSTANDTWICEPWDISDIFF;
+        }
+        editUser.getUser().setPassword(new BCryptPasswordEncoder().encode(editUser.getFirstPwd()));
+        Integer result=  userMapper.editUser(editUser.getUser());
+        LOGGER.info("result:"+result);
+
+        if(result!=0){//输入的密码和数据库中的密码不一致
+            LOGGER.info("进入退出动作");
+            loginService.logout(); //退出重新登录
+            return  ResponseResult.LOGIN_OUT_ERLOGIN;
+        }
+            return ResponseResult.USER_EDIT_FAILED;
+
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println("::::===>"+ new BCryptPasswordEncoder().encode("5178y76m5iqo"));
+        System.out.println("::::===>$2a$10$OHzRvMuOCQdlYTvYFG2NZeHo8LC7kQCciioIFeterfrrGfVxcGdNS");
+
+
+
+    }
+
+
 }

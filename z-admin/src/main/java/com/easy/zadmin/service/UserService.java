@@ -2,6 +2,7 @@ package com.easy.zadmin.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.easy.zadmin.common.res.ResponseResult;
+import com.easy.zadmin.pojo.dto.EditUser;
 import com.easy.zadmin.pojo.dto.PageUser;
 import com.easy.zadmin.pojo.entity.User;
 import org.apache.ibatis.annotations.Param;
@@ -19,11 +20,11 @@ public interface UserService {
     Page<User>  pageUser(PageUser<User> pageUser);
     ResponseResult createUser(User user,String userid);
     ResponseResult editUser( User user);
-    ResponseResult delUserById(User user);
+    ResponseResult delUserById(List<User> user);
 
     ResponseResult  updateStatus(User user);
 
     ResponseResult  getUserByEmail(String  email);
 
-
+    ResponseResult updatePwd(EditUser editUser);
 }

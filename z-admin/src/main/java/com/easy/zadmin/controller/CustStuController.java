@@ -110,8 +110,8 @@ public class CustStuController {
     /**
      * 获取所有老师数据
      */
-    @GetMapping("/order/getUserInfo")
-    public  ResponseResult   userInfos(@RequestParam(value="teaName", defaultValue="") String  teaName){
+    @GetMapping("/customer/getUserInfo")
+    public  ResponseResult   userInfos(@RequestParam(value="teachName", defaultValue="") String  teaName){
 
         return userService.getUserInfos(teaName);
     }
@@ -119,7 +119,7 @@ public class CustStuController {
     /**
      * 获取所有的课程信息
      */
-    @GetMapping("/order/getCoursesInfo")
+    @GetMapping("/customer/getCoursesInfo")
     public  ResponseResult   courseInfos(@RequestParam(value="course", defaultValue="") String  course){
         List<Course> courseInfos = courseService.getCourseInfos(course);
         return new ResponseResult("200",courseInfos);

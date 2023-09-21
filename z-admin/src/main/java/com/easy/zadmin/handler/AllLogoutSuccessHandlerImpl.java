@@ -27,7 +27,7 @@ public class AllLogoutSuccessHandlerImpl implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         // 当认证成功后，响应 JSON 数据给前端
         LOGGER.info("进入onLogoutSuccess退出成功...");
-        final ResponseResult r = new ResponseResult("200","退出成功");
+        final ResponseResult r = new ResponseResult("204","退出成功");
         final String jsonString = JSONObject.toJSONString(r);
         response.setContentType("application/json;charset=utf-8");
         response.getWriter().write(jsonString);

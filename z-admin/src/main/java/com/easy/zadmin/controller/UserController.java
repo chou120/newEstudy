@@ -2,8 +2,10 @@ package com.easy.zadmin.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.easy.zadmin.common.res.ResponseResult;
+import com.easy.zadmin.pojo.dto.EditUser;
 import com.easy.zadmin.pojo.dto.PageUser;
 import com.easy.zadmin.pojo.entity.User;
+import com.easy.zadmin.service.LoginServcie;
 import com.easy.zadmin.service.UserService;
 import com.easy.zadmin.util.CheckEmail;
 import com.easy.zadmin.util.CheckPassword;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @Author sanye
@@ -28,6 +31,8 @@ public class UserController {
     private Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
+    @Autowired
+    private LoginServcie loginServcie;
 
     @GetMapping("/user/infos")
     public ResponseResult queryInfos(@RequestParam(value="teaName", defaultValue="") String  teaName) {
@@ -90,19 +95,19 @@ public class UserController {
 
 
     @PostMapping("/user/delById")
-    public  ResponseResult delById(@RequestBody User user){
+    public  ResponseResult delById(@RequestBody List<User> list){ // @Transactional(rollbackFor = Exception.class)
 
-        if(user.getId()==null){
+        if(list.size()==0){
             return ResponseResult.USERID_NOTEXISTS;
         }
 
-        return userService.delUserById(user);
+        return userService.delUserById(list);
     }
 
     //  /user/editUserInfo
 
 
-    @PostMapping("/user/editUserInfo")
+    @PostMapping("/user/editUserInfo") //编辑用户
     public  ResponseResult editUserInfo(@RequestBody User user){
 
         if(StringUtils.isBlank(user.getUserName())){
@@ -156,6 +161,32 @@ public class UserController {
          return   ResponseResult.USER_EMAIL_NOT_NULL;
         }
         return  userService.getUserByEmail(email);
+    }
+
+
+    @PostMapping("/user/upsetPwd") //更新密码
+    public ResponseResult upsetPwd(@RequestBody EditUser editUser){
+
+        LOGGER.info("editUser:"+editUser);
+
+        String email = editUser.getUser().getEmail();
+        if(StringUtils.isBlank(email)){
+            return   ResponseResult.USER_EMAIL_NOT_NULL;
+        }
+        String password = editUser.getUser().getPassword(); //旧密码
+        if(StringUtils.isBlank(password)){
+            return ResponseResult.USER_PASSWORD_NOT_EMPTY;
+        }
+
+        return  userService.updatePwd(editUser);
+    }
+
+    //退出登录：
+
+
+    @GetMapping("/user/logout") //退出重新登录
+    public ResponseResult logout(){
+        return  loginServcie.logout();
     }
 
 }

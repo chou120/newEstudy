@@ -18,8 +18,9 @@ public interface UserMapper extends BaseMapper<User> {
     Integer createUser(@Param("user") User user);
 
     Integer editUser(@Param("user") User user);
+    Integer editUserById(@Param("user") User user);
 
-    Integer delUser(@Param("user") User user);
+    Integer delUser(@Param("list") List<User> user);
 
     List<User> getUsersInfos(@Param("teaName") String teaName);
 

@@ -15,8 +15,6 @@
 <!--    <version>2.3.3.RELEASE</version>-->
 <!--  </plugin>-->
 
-
-
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>

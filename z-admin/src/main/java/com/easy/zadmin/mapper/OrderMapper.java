@@ -17,7 +17,7 @@ import java.util.List;
 public interface OrderMapper {
 
     Integer createOrder(@Param("order") Order order);
-    Integer delOrder(@Param("order") Order order);
+    Integer delOrder(@Param("list")List<Order> list);
     Integer editOrder(@Param("order") Order order);
     Order queryOrder(@Param("orderId") String orderId);
     Page<Order> selectPageVo(@Param("page") Page<Order> page, @Param("order") Order order);

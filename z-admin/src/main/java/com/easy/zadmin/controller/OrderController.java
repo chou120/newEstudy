@@ -101,6 +101,21 @@ public class OrderController {
     }
 
     /**
+     * 批量删除
+     * delAllOrderById
+     */
+    @PostMapping("/order/delAllOrderById") //订单完成
+    public  ResponseResult delAllOrderById(@RequestBody List<Order> list){
+        if(list.size()==0){
+            return ResponseResult.COLLECTIONISNULL;
+        }
+        LOGGER.info("list:"+list);
+        ResponseResult result = orderService.delAllOrderById(list);
+        return result;
+    }
+
+
+    /**
      * 批量更新
      */
     @PostMapping("/order/orderOver") //订单完成
@@ -109,16 +124,19 @@ public class OrderController {
             return ResponseResult.COLLECTIONISNULL;
         }
         LOGGER.info("list:"+list);
-        int res = orderService.updateBatch(list);
-        return new ResponseResult("200",res);
+        ResponseResult result = orderService.delAllOrderById(list);
+        return result;
     }
 
     /**
      * 分页
      */
 
-    @PostMapping("/order/pageUser") //订单完成
+    @PostMapping("/order/pageUser") //
     public  ResponseResult pageUser(@RequestBody PageUser<Order> pageUser){
+
+        LOGGER.info("pageUser:"+pageUser);
+
 
         return new ResponseResult("200", orderService.pageUser(pageUser));
     }

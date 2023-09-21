@@ -29,5 +29,7 @@ public interface OrderService {
 
     ResponseResult rebackOrder(OrderDto orderDto);
 
+    ResponseResult delAllOrderById(List<Order>  list);
+
 
 }

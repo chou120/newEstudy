@@ -12,14 +12,10 @@ public class ResponseResult<T> {
      **/
     public static final ResponseResult REQ_SUCCESS = new ResponseResult("200", "请求成功");
     public static final ResponseResult SYS_ERROR = new ResponseResult("500", "网络繁忙,请稍后再试");
-    public static final ResponseResult ARGS_ERROR = new ResponseResult("400", "参数错误");
-    public static final ResponseResult SYS_ARGS_ERROR = new ResponseResult("401", "系统参数错误");
-
     /**
      * 外部接口返回的状态码
      */
     public static final ResponseResult TOKEN_ISNULL  = new ResponseResult("300", "请求头token为空");
-    public static final ResponseResult MERCH_API_CORPID_IS_NULL  = new ResponseResult("301", "");
     public static final ResponseResult TOKEN_FAILURE  = new ResponseResult("302", "token失效或不存在");
     public static final ResponseResult TOKEN_INVALID = new ResponseResult("303", "token无效");
     public static final ResponseResult OPRETION_INVALID = new ResponseResult("304", "非法操作");
@@ -52,10 +48,10 @@ public class ResponseResult<T> {
     public static final ResponseResult USERNAME_NOT_NULL = new ResponseResult("543", "用户名不能为空");
     public static final ResponseResult USER_EMAIL_NOT_NULL = new ResponseResult("544", "邮箱不能为空");
     public static final ResponseResult EMAIL_FORMAT_NOT_TRUE = new ResponseResult("545", "邮箱格式不正确");
-    public static final ResponseResult EDIT_USER_RES = new ResponseResult("546", "账户状态更改成功");
+    public static final ResponseResult EDIT_USER_RES = new ResponseResult("200", "账户状态更改成功");
     public static final ResponseResult STATUS_NULL = new ResponseResult("547", "账号状态不存在");
     public static final ResponseResult USER_EMAIL_NOT_EXIST = new ResponseResult("548", "该邮箱还未被注册");
-    public static final ResponseResult PASSWORD_SEND_TO_EMAIL= new ResponseResult("549", "新密码已经重新发送至邮箱");
+    public static final ResponseResult PASSWORD_SEND_TO_EMAIL= new ResponseResult("200", "新密码已经重新发送至邮箱");
     public static final ResponseResult CUSTNAME_NOT_EMPTY= new ResponseResult("550", "客户名不能为空");
     public static final ResponseResult CUSTEMAIL_NOT_EMPTY= new ResponseResult("551", "客户邮箱不能为空");
     public static final ResponseResult CUSTERMPTY_NOT_NULL= new ResponseResult("552", "金额不能为空");
@@ -69,7 +65,12 @@ public class ResponseResult<T> {
     public static final ResponseResult PRICE_IS_NULL= new ResponseResult("559", "单价必填");
     public static final ResponseResult REBACKMONEY_NOT_NULL= new ResponseResult("560", "退款金额不能为空");
     public static final ResponseResult REBACKTYPE_NOT_NULL= new ResponseResult("561", "退款类型不能为空");
-    public static final ResponseResult COLLECTIONISNULL= new ResponseResult("562", "请选择要完成的订单");
+    public static final ResponseResult COLLECTIONISNULL= new ResponseResult("562", "请选择要操作的订单");
+    public static final ResponseResult USERISNULLORFORBIDEN= new ResponseResult("430", "当前账户已失效或不存在");
+    public static final ResponseResult LOGIN_OUT_ERLOGIN= new ResponseResult("204", "密码修改成功,请重新登录");
+    public static final ResponseResult USER_OR_PASSWORD_ERROR= new ResponseResult("410", "账户名或密码错误");
+    public static final ResponseResult OLDPWDISFALSE= new ResponseResult("405", "密码错误");
+    public static final ResponseResult FIRSTANDTWICEPWDISDIFF= new ResponseResult("412", "新密码两次输入不一样");
 
     /**
      * 状态码

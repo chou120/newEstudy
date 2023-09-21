@@ -81,6 +81,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //自定义AuthenticationEntryPoint和AccessDeniedHandler然后配置给SpringSecurity
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).
                 accessDeniedHandler(accessDeniedHandler);
+
+        LOGGER.info("认证失效之后");
+
 //        //允许跨域
       http.cors();
         http.formLogin()
@@ -88,16 +91,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(successHandler)
                 //配置认证失败处理器
                 .failureHandler(failureHandler);
-
+        LOGGER.info("登录之后");
         http.logout()
                 //配置注销成功处理器
                 .logoutSuccessHandler(logoutSuccessHandler);
 
+        LOGGER.info("退出之后");
     }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
+        LOGGER.info("校驗最終進入這裡。。。。");
         return super.authenticationManagerBean();
     }
+
+
+
+
 }

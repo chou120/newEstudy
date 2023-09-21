@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+       <include resource="org/springframework/boot/logging/logback/base.xml" />
+       <!--<logger name="org.springframework.web" level="INFO"/>
+       <logger name="org.springboot.sample" level="TRACE" />-->
+       <!--生产的服务器日志路径-->
+       <property name="PROD_SERVER_LOG_HOME" value="/java/java-application/prod/log" />
+
+       <property name="TEST_SERVER_LOG_HOME" value="/java/java-application/dev/log" />
+
+       <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+              <encoder>
+                     <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n</pattern>
+                     <charset>UTF-8</charset>
+              </encoder>
+       </appender>
+       <appender name="serverRollingFileAppenderProd" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+              <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                     <!-- 日志输出目录 -->
+                     <FileNamePattern>${PROD_SERVER_LOG_HOME}/%d{yyyy-MM-dd}_easyStudy_server.log</FileNamePattern>
+                     <!-- 日志存储近30天 -->
+                     <maxHistory>7</maxHistory>
+              </rollingPolicy>
+              <encoder>
+                     <!--日志输出格式-->
+                     <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n</Pattern>
+                     <charset>utf-8</charset>
+              </encoder>
+       </appender>
+       <appender name="serverRollingFileAppenderTest" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+              <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                     <!-- 日志输出目录 -->
+                     <FileNamePattern>${TEST_SERVER_LOG_HOME}/%d{yyyy-MM-dd}_test_easyStudy_server.log</FileNamePattern>
+                     <!-- 日志存储近30天 -->
+                     <maxHistory>7</maxHistory>
+              </rollingPolicy>
+              <encoder>
+                     <!--日志输出格式-->
+                     <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n</Pattern>
+                     <charset>utf-8</charset>
+              </encoder>
+       </appender>
+       <!--生产环境-->
+       <springProfile name="prod">
+              <logger name="com" level="info" />
+              <root level="INFO">
+                     <appender-ref ref="serverRollingFileAppenderProd" />
+              </root>
+       </springProfile>
+       <!--测试环境-->
+       <springProfile name="dev">
+              <logger name="com" level="info" />
+              <root level="INFO">
+                     <appender-ref ref="serverRollingFileAppenderTest" />
+              </root>
+       </springProfile>
+</configuration>

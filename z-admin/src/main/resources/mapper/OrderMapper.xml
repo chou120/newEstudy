@@ -12,18 +12,22 @@
 
 <!--   分页带条件查询 -->
     <select id="selectPageVo" resultType="com.easy.zadmin.pojo.entity.Order">
-        select *from `order` where 1=1 and del_flag=0 and  order_status=#{order.orderStatus}
+        select * from `order` where 1=1 and del_flag=0
+
+        <if test="null != order.orderStatus and '' != order.orderStatus">
+            and order_status = #{order.orderStatus}
+        </if>
 
         <if test="null != order.orderId and '' != order.orderId">
             and order_id = #{order.orderId}
         </if>
         <if test="null != order.teachName and '' != order.teachName">
-            <bind name="order.teachName" value="'%'+order.teachName+'%'"/>
-            and teach_name like #{order.teachName}
+<!--            <bind name="order.teachName" value="'%'+order.teachName+'%'"/>-->
+            and teach_name like concat('%', #{order.teachName}, '%')
         </if>
         <if test="null != order.customerName and '' != order.customerName">
-            <bind name="order.customerName" value="'%'+order.customerName+'%'"/>
-            and customer_name like #{order.customerName}
+<!--            <bind name="order.customerName" value="'%'+order.customerName+'%'"/>-->
+            and customer_name like   concat('%', #{order.customerName}, '%')
         </if>
         <if test="null != order.stuId and '' != order.stuId">
             and stu_id = #{order.stuId}
@@ -32,9 +36,12 @@
 <!--   上课时间  TODO      <if test="order.courseTime != null">-->
 <!--            <![CDATA[ and DATE_FORMAT(course_time, '%Y-%m-%d') >= #{0} ]]>-->
 <!--        </if>-->
-<!--        <if test="order.courseTime!= null">-->
-<!--            <![CDATA[ and DATE_FORMAT(course_time, '%Y-%m-%d') <= #{0} ]]>-->
-<!--        </if>-->
+        <if test="order.endTime!= null ">
+           and  course_time <![CDATA[ <= ]]> #{order.endTime}
+        </if>
+        <if test="order.startTime!= null">
+            and  course_time <![CDATA[ >= ]]> #{order.startTime}
+        </if>
 
         order by create_time desc
 
@@ -79,6 +86,14 @@
         </foreach>
     </update>
 
+    <update id="delOrder" parameterType="java.util.List">
+        UPDATE `order`
+        SET del_flag = 1
+        WHERE `order`.order_id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.orderId}
+        </foreach>
+    </update>
 
 <!--  批量更新完成之后，对批量更新的客户余额进行减少动作  -->
     <update id="updateBatchByEmailToCustomer" parameterType="java.util.List">

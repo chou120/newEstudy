@@ -1,5 +1,6 @@
 package com.easy.zadmin.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -30,9 +31,29 @@ public class Order {
     private  Double price;
     private Double orderTotal;
     private Integer delFlag;
+    @TableField("order_status")
     private Integer orderStatus;
     private Long stuId;
     private Long userId;
+
+    private Date startTime;
+    private Date endTime;
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 
     public Long getStuId() {
         return stuId;

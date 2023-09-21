@@ -26,10 +26,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //根据用户名查询用户信息
+        LOGGER.error("email:"+email);
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getEmail,email);
         User user = userMapper.selectOne(wrapper);
-        LOGGER.info("user："+user);
+        LOGGER.error("user："+user);
 
         //如果查询不到数据就通过抛出异常来给出提示
         if(Objects.isNull(user)){
